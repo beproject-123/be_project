@@ -1,0 +1,144 @@
+import React, { useState } from "react";
+import { FaTrashAlt } from "react-icons/fa";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+import Navbar from "../components/Navbar";
+import Hero from "../components/Hero";
+import Footer from "../components/Footer";
+import AboutImage from "../assets/Image.png";
+
+const ProductPage = () => {
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [analysisResult, setAnalysisResult] = useState(null);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+    }
+  };
+  const handleFileRemove = () => {
+    setSelectedFile(null);
+    setAnalysisResult(null);
+  };
+  const handleAnalyse = () => {
+    setAnalysisResult(73.6);
+  };
+
+  return (
+    <div className="bg-[#282828] text-gray-200 font-sans">
+      <Navbar />
+      <Hero />
+
+      {/* Upload Section */}
+      <section id="upload-section" className="flex justify-center py-16 px-6 scroll-mt-20">
+        <div className="bg-[#1a1a1a] w-full md:w-3/4 lg:w-2/3 rounded-lg p-20 text-center shadow-xl">
+          <h2 className="text-2xl md:text-3xl font-bold text-white">
+            Upload your .mp3 file
+          </h2>
+          <div className="mt-6">
+            <input
+              type="file"
+              accept=".mp3"
+              id="file-upload"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+            <label
+              htmlFor="file-upload"
+              className="px-6 py-2 bg-lime-400 text-gray-900 font-semibold rounded-lg shadow-md cursor-pointer hover:bg-lime-500 transition duration-300"
+            >
+              Choose File
+            </label>
+          </div>
+        </div>
+      </section>
+
+      {/* File List Section */}
+      {selectedFile && (
+        <section className="flex justify-center py-10 px-6">
+          <div className="bg-[#1a1a1a] w-full md:w-3/4 lg:w-2/3 rounded-lg p-6 shadow-xl">
+            <h3 className="text-2xl font-bold text-white mb-4">File List</h3>
+            <hr className="border-lime-400 mb-4" />
+            <div className="bg-gray-800 flex items-center justify-between p-4 rounded-lg shadow">
+              <span className="text-gray-300">{selectedFile.name} ({(selectedFile.size / 1024).toFixed(1)} Kb)</span>
+              <button onClick={handleFileRemove} className="text-red-500 hover:text-red-600">
+                <FaTrashAlt />
+              </button>
+            </div>
+            <div className="flex justify-end gap-4 mt-6">
+              <button onClick={handleAnalyse} className="px-6 py-2 bg-lime-400 text-gray-900 font-semibold rounded-lg shadow-md hover:bg-lime-500 transition duration-300">
+                Analyse
+              </button>
+              <button onClick={handleFileRemove} className="text-gray-400 hover:text-gray-300">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Instructions Section */}
+      <section className="flex flex-col md:flex-row items-center justify-center gap-10 px-6 py-16">
+        <div className="w-full md:w-1/3 flex justify-center">
+          <img
+            src={AboutImage}
+            alt="Instruction Image"
+            className="rounded-lg shadow-lg"
+          />
+        </div>
+
+        <div className="w-full md:w-1/2 bg-[#1a1a1a] p-20 rounded-lg shadow-xl">
+          <h3 className="text-xl font-bold text-lime-400">How to Verify Audio Authenticity</h3>
+          <ul className="mt-4 text-gray-300 space-y-3 text-sm md:text-base">
+            <li><span className="font-bold">1.</span> Upload or <strong>Drag & Drop</strong> your audio file into our verification tool.</li>
+            <li><span className="font-bold">2.</span> Click <strong>“Analyse”</strong> to start the verification process.</li>
+            <li><span className="font-bold">3.</span> The results will be shown below after completion of the analysis.</li>
+          </ul>
+        </div>
+      </section>
+
+      {/* Analysis Result Section */}
+      {analysisResult !== null && (
+        <section className="flex justify-center py-16 px-6">
+          <div className="bg-[#1a1a1a] w-full md:w-3/4 lg:w-3/4 rounded-lg p-20 shadow-xl text-center flex flex-col md:flex-row items-center justify-between gap-10">
+
+            {/* Left - Text Content */}
+            <div className="text-left md:w-2/3">
+              <h3 className="text-3xl font-bold text-lime-400">Your Analysis Result</h3>
+              <p className="mt-4 text-gray-300 font-semibold text-lg">
+                Oops, Look like your Audio file is <span className="text-white font-bold">AI-Generated</span>
+              </p>
+              <p className="mt-2 text-gray-400 text-sm md:text-base">
+                Your Audio file has more than likely been generated by an AI, which can result in unnatural speech patterns,
+                errors in tone, or other inconsistencies that are not typical of a human voice.
+              </p>
+            </div>
+
+            {/* Right - Circular Progress Bar */}
+            <div className="w-1/3 flex justify-center mt-6 md:mt-0 md:ml-10">
+              <CircularProgressbar
+                value={analysisResult}
+                text={`${analysisResult}%`}
+                strokeWidth={14}
+                styles={buildStyles({
+                  textColor: "#D4FF78",
+                  pathColor: "#D4FF78",
+                  trailColor: "#333",
+                  textSize: "20px",
+                  textSize: "18px",
+                  strokeWidth: 25,
+                  fontWeight: "bold",
+                })}
+              />
+            </div>
+          </div>
+        </section>
+      )}
+
+      <Footer />
+    </div>
+  );
+};
+
+export default ProductPage;
